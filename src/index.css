@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --toast-top: var(--toast-top-offset, theme("spacing.4"));
+  --toast-bottom: var(--toast-bottom-offset, theme("spacing.4"));
+  --toast-left: var(--toast-left-offset, theme("spacing.4"));
+  --toast-right: var(--toast-right-offset, theme("spacing.4"));
+}
+
+html,
+body {
+  height: 100dvh;
+}
+
+.toast-progress-bar {
+  @apply min-h-1 bg-blue-500/50 absolute bottom-0 left-0 rounded-t w-full;
+}
+
+.toast-progress-bar-indicator {
+  @apply min-h-1 bg-blue-500 rounded-t transition-all duration-[50];
+}
+
+.toast-success {
+  @apply border-l-green-500;
+}
+
+.toast-error {
+  @apply border-l-red-500;
+}
+
+.toast-warning {
+  @apply border-l-yellow-500;
+}
+
+.toast-info {
+  @apply border-l-blue-500;
+}
