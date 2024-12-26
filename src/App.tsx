@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button, ButtonGroup } from "@nextui-org/react";
 import { useToast } from "./toast/use-toast";
 import { ToastContainer } from "./toast/container";
 import type { Toast } from "./toast/types";
@@ -6,7 +6,8 @@ import { useEffect } from "react";
 
 function CustomMessage() {
   return (
-    <div>
+    <div className="grid gap-4">
+      <h2 className="text-2xl font-bold">Custom Title</h2>
       <p className="text-black">This is a custom message component!</p>
       <Button>Click me!</Button>
     </div>
@@ -72,31 +73,119 @@ function App() {
   }, [addNotification]);
 
   return (
-    <main className="h-screen w-screen flex items-center justify-center gap-4">
-      <Button
-        onClick={() => showStringNotification("top-right")}
-        color="primary"
-      >
-        Top Right (String)
-      </Button>
-      <Button onClick={() => showCustomNotification("bottom-left")}>
-        Button Left (Component)
-      </Button>
-
-      <Button
-        onClick={() =>
-          addNotification({
-            content: "New Toast",
-            position: "bottom-right",
-            duration: 15000,
-            halted: true,
-          })
-        }
-      >
-        New Toast
-      </Button>
+    <main className="h-screen w-screen flex flex-col items-center justify-center gap-4">
+      <ButtonGroup>
+        <Button
+          onClick={() => showStringNotification("top-right")}
+          color="primary"
+        >
+          With String Content
+        </Button>
+        <Button onClick={() => showCustomNotification("bottom-left")}>
+          With Custom Content
+        </Button>
+      </ButtonGroup>
 
       <Button onClick={() => fetchSomething()}>Fetch Something </Button>
+
+      <ButtonGroup>
+        <Button
+          onClick={() =>
+            addNotification({
+              content: "Top Left",
+              position: "top-left",
+            })
+          }
+        >
+          Top Left
+        </Button>
+        <Button
+          onPress={() =>
+            addNotification({
+              content: "Top Center",
+              position: "top-center",
+            })
+          }
+        >
+          Top Center
+        </Button>
+        <Button
+          onClick={() =>
+            addNotification({
+              content: "Top Left",
+              position: "top-right",
+            })
+          }
+        >
+          Top Right
+        </Button>
+      </ButtonGroup>
+
+      <ButtonGroup>
+        <Button
+          onClick={() =>
+            addNotification({
+              content: "Center Left",
+              position: "center-left",
+            })
+          }
+        >
+          Center Left
+        </Button>
+        <Button
+          onPress={() =>
+            addNotification({
+              content: "Center Toast",
+              position: "center-center",
+            })
+          }
+        >
+          Centered
+        </Button>
+        <Button
+          onClick={() =>
+            addNotification({
+              content: "Center Left",
+              position: "center-right",
+            })
+          }
+        >
+          Center Right
+        </Button>
+      </ButtonGroup>
+
+      <ButtonGroup>
+        <Button
+          onClick={() =>
+            addNotification({
+              content: "Bottom Left",
+              position: "bottom-left",
+            })
+          }
+        >
+          Bottom Left
+        </Button>
+        <Button
+          onPress={() =>
+            addNotification({
+              content: "Bottom Center",
+              position: "bottom-center",
+            })
+          }
+        >
+          Bottom Center
+        </Button>
+        <Button
+          onClick={() =>
+            addNotification({
+              content: "Bottom Left",
+              position: "bottom-right",
+            })
+          }
+        >
+          Bottom Right
+        </Button>
+      </ButtonGroup>
 
       <ToastContainer />
     </main>

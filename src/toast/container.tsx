@@ -4,15 +4,34 @@ import { ToastNotification } from "./notification";
 import { useGroupedNotifications } from "./use-grouped-notifications";
 import { makeVariants } from "./make-variants";
 
+const styles = {
+  positionTop: "[&_[data-position=top]]:top-[var(--toast-top)]",
+  positionBottom: "[&_[data-position=bottom]]:bottom-[var(--toast-bottom)]",
+  positionCenter:
+    "[&>[data-position=center]]:top-1/2 [&>[data-position=center]]:-translate-y-1/2",
+  placementLeft: "[&_[data-placement=left]]:left-[var(--toast-left)]",
+  placementRight: "[&_[data-placement=right]]:right-[var(--toast-right)]",
+  placementCenter:
+    "[&>[data-placement=center]]:left-1/2 [&>[data-placement=center]]:-translate-x-1/2",
+  transform:
+    "[&>[data-position=center]]:!transform [&>[data-placement=center]]:!transform",
+};
+
+const formatAriaLabel = (count: number) =>
+  `${count} notification${count === 1 ? "" : "s"} available`;
+
 export const ToastContainer = () => {
   const groups = useGroupedNotifications();
   return (
     <div
       className={cn(
-        "[&_[data-position=top]]:top-[var(--toast-top)]",
-        "[&_[data-position=bottom]]:bottom-[var(--toast-bottom)]",
-        "[&_[data-placement=left]]:left-[var(--toast-left)]",
-        "[&_[data-placement=right]]:right-[var(--toast-right)]",
+        styles.positionTop,
+        styles.positionBottom,
+        styles.positionCenter,
+        styles.placementLeft,
+        styles.placementRight,
+        styles.placementCenter,
+        styles.transform
       )}
     >
       <AnimatePresence>
@@ -31,6 +50,7 @@ export const ToastContainer = () => {
               animate="animate"
               exit="exit"
               role="region"
+              aria-label={formatAriaLabel(notifications.length)}
               {...positionAttrs}
             >
               <AnimatePresence>

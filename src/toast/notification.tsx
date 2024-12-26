@@ -1,7 +1,7 @@
 import { useRef, useMemo, type FC } from "react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { useSignal, useSignalEffect, useComputed } from "@preact/signals-react";
-import { Button } from "@nextui-org/react";
+import { Button, cn } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import useToastStore from "./store";
 import type { Toast } from "./types";
@@ -11,8 +11,19 @@ interface ToastNotificationProps extends Toast {
   role?: string;
 }
 
+// TODO: Adjust default duration for WCAG 2.2.1 -- allow flexibility for users
+// https://www.w3.org/WAI/WCAG21/Understanding/timing-adjustable.html
+
+const variantStyles = {
+  success: "shadow-green-500/25 border-l-green-500",
+  error: "shadow-red-500/25 border-l-red-500",
+  warning: "shadow-yellow-500/25 border-l-yellow-500",
+  info: "shadow-blue-500/25 border-l-blue-500",
+};
+
 export const ToastNotification = ({
   id,
+  title,
   content,
   variant = "info",
   duration = 5000,
@@ -20,6 +31,7 @@ export const ToastNotification = ({
   role = "alert",
   halted = false,
   pauseOnHover = true,
+  ariaLabelledby,
 }: ToastNotificationProps) => {
   useSignals();
   const paused = useSignal(halted);
@@ -39,9 +51,14 @@ export const ToastNotification = ({
   const MessageComponent = useMemo(
     () =>
       typeof content === "string"
-        ? () => <p>{content as string}</p>
+        ? () => (
+            <div className="grid gap-4">
+              {title ? <h2 className="text-2xl font-bold">{title}</h2> : null}
+              <p className="text-black">{content}</p>
+            </div>
+          )
         : (content as FC),
-    [content],
+    [title, content]
   );
 
   const variants = useMemo(() => makeVariants(position), [position]);
@@ -97,7 +114,10 @@ export const ToastNotification = ({
   return (
     <motion.div
       key={id}
-      className={`bg-white rounded shadow-md border-l-4 max-w-xs text-black relative grid grid-flow-col-dense toast-${variant}`}
+      className={cn(
+        "bg-white rounded shadow-md border-l-4 max-w-xs text-black relative grid grid-flow-col-dense auto-cols-[1fr_auto]",
+        variantStyles[variant]
+      )}
       variants={variants}
       initial="initial"
       animate="animate"
@@ -105,6 +125,7 @@ export const ToastNotification = ({
       role={role}
       aria-live="assertive"
       aria-atomic="true"
+      aria-labelledby={ariaLabelledby ?? `toast-message-${id}`}
       onMouseEnter={() => !halted && (paused.value = true)}
       onMouseLeave={() => !halted && (paused.value = false)}
       {...positionAttrs}
@@ -115,7 +136,7 @@ export const ToastNotification = ({
       <Button
         isIconOnly
         onClick={handleClose}
-        aria-label="Close toast notification"
+        aria-label="Close notification"
         variant="light"
         size="md"
         radius="full"
@@ -123,7 +144,7 @@ export const ToastNotification = ({
         &times;
       </Button>
       <div
-        className="toast-progress-bar"
+        className="min-h-1 bg-blue-500/50 absolute bottom-0 left-0 rounded-t w-full"
         role="progressbar"
         aria-valuenow={(remainingTime.value / duration) * 100}
         aria-valuemin={0}
@@ -131,7 +152,7 @@ export const ToastNotification = ({
         aria-labelledby={`toast-message-${id}`}
       >
         <div
-          className="toast-progress-bar-indicator"
+          className="min-h-1 bg-blue-500 rounded-t transition-all duration-[50]"
           style={progressBarStyle.value}
         />
       </div>
